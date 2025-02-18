@@ -3,16 +3,24 @@ require 'optparse'
 
 OUTPUT = []
 OPTIONS = {}
-puts ARGV
-OptionParser.new do |opts|
-  opts.banner = "Usage: wc.rb [options]"
-  opts.on("-c", "--bytes", "print the byte counts") { OPTIONS[:bytes] = true }
-  opts.on("-l", "--lines", "print the newline counts") { OPTIONS[:lines] = true }
-  opts.on("-w", "--words", "print the word counts") { OPTIONS[:words] = true }
-  opts.on("-m", "--chars", "print the character counts") { OPTIONS[:chars] = true }
-end.parse!
 
-FILENAME = ARGV.shift
+def initialize_options!
+  OptionParser.new do |opts|
+    opts.banner = "Usage: wc.rb [options]"
+    opts.on("-c", "--bytes", "print the byte counts") { OPTIONS[:bytes] = true }
+    opts.on("-l", "--lines", "print the newline counts") { OPTIONS[:lines] = true }
+    opts.on("-w", "--words", "print the word counts") { OPTIONS[:words] = true }
+    opts.on("-m", "--chars", "print the character counts") { OPTIONS[:chars] = true }
+  end.parse!
+end
+
+def set_defaults!
+  OPTIONS[:bytes] = OPTIONS[:lines] = OPTIONS[:words] = true if OPTIONS.empty?
+end
+
+def append_output(key, output)
+  OUTPUT << output if OPTIONS[key]
+end
 
 def byte_counts
   File.read(FILENAME, mode: "rb").bytesize
@@ -30,26 +38,15 @@ def chars_count
   File.read(FILENAME).chars.size
 end
 
-if OPTIONS.empty?
-  OPTIONS[:bytes] = OPTIONS[:lines] = OPTIONS[:words] = true
-end
+initialize_options!
+set_defaults!
 
-if OPTIONS[:lines]
-  OUTPUT << "#{newline_counts}"
-end
+FILENAME = ARGV.shift
 
-if OPTIONS[:words]
-  OUTPUT << "#{words_count}"
-end
-
-if OPTIONS[:bytes]
-  OUTPUT << "#{byte_counts}"
-end
-
-if OPTIONS[:chars]
-  OUTPUT << "#{chars_count}"
-end
+append_output(:lines, newline_counts)
+append_output(:words, words_count)
+append_output(:bytes, byte_counts)
+append_output(:chars, chars_count)
 
 OUTPUT << FILENAME
-
 p OUTPUT.join(" ")
