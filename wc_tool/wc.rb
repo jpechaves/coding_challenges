@@ -26,7 +26,7 @@ def set_data_stream!
     @data_stream = STDIN.read
   else
     @filename = ARGV.shift
-    @data_stream = File.read(@filename)
+    @data_stream = File.read(@filename) if @filename
   end
 end
 
@@ -60,4 +60,4 @@ append_output(:bytes, byte_counts)
 append_output(:chars, chars_count)
 
 OUTPUT << @filename
-p OUTPUT.compact.join(" ")
+puts OUTPUT.compact.join(" ")
