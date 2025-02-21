@@ -37,6 +37,19 @@ $ cat test.txt | ./wc.rb
 "7145 58164 342190"
 ```
 
+## Run tests
+
+```sh
+$ ruby wc_test.rb
+Loaded suite wc_test
+Started
+Finished in 0.892328925 seconds.
+------------------------------------------------------------------------------------------------------------------------
+12 tests, 48 assertions, 0 failures, 0 errors, 0 pendings, 0 omissions, 0 notifications
+100% passed
+------------------------------------------------------------------------------------------------------------------------
+```
+
 ## Ruby
 
 ```sh
